@@ -3,7 +3,7 @@
 ## 실제 상태
 
 - 제품명: DK Travel Helper / 여행잇다.
-- T00 완료. T01은 사용자 결정·문서 갱신 단계이며 검증·원격·PR 반영 후 완료 처리한다. 작업 브랜치 `task/t01-platform-data`, 미병합.
+- T00 완료. T01은 사용자 결정·문서 갱신·검증·원격 반영·[PR #1 생성](https://github.com/danhk0612/DK-Travel-Helper/pull/1)까지 완료했다. 작업 브랜치 `task/t01-platform-data`, 미병합. 기본 브랜치에는 아직 T00만 있다.
 - 존재하는 것: README, PROJECT, REQUIREMENTS, ARCHITECTURE, CURRENT_STATE, TASKS, AI_WORKFLOW와 [D001](decisions/D001-플랫폼과-데이터.md) 결정 문서.
 - 선택된 기술: 반응형 웹/PWA, React + TypeScript + Vite, Android 우선. 초기 검증용 Supabase Free + Google 로그인 + PostgreSQL 서버 원본, IndexedDB 열람 사본과 Cache Storage 자체 화면 자원.
 - 수정은 온라인 로그인 상태에서만 가능. 오프라인은 준비된 계획 확인만 지원한다. 무료/유료1/유료2 여행·장소 한도는 3/50, 15/150, 50/300이며 관리자 페이지에서 변경하는 요구가 확정됐다.
