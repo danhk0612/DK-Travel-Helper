@@ -1,6 +1,6 @@
 # 개발 Task
 
-이 파일이 현재 작업 계약이다. 각 Task의 관련 요구사항은 REQUIREMENTS.md의 ID를 참조한다. 현재 코드가 없으므로 “관련 모듈”은 논리 책임을 뜻하며 실제 경로는 T04 이후 갱신한다. T01 결정은 [D001](decisions/D001-플랫폼과-데이터.md)에 기록돼 있다.
+이 파일이 현재 작업 계약이다. 각 Task의 관련 요구사항은 REQUIREMENTS.md의 ID를 참조한다. 앱 골격은 `src/App.tsx`, `src/styles.css`, `src/main.tsx`, `vite.config.ts`, `.github/workflows/ci.yml`에 있다. 아직 없는 기능 모듈은 논리 책임을 뜻하며 T03에서 구현 인계 경로를 정한다. T01 결정은 [D001](decisions/D001-플랫폼과-데이터.md)에 기록돼 있다.
 
 ## 전체 순서와 상태
 
@@ -10,7 +10,7 @@
 | T01 | 플랫폼과 PC·휴대폰 데이터 이용 방식 결정 | 완료 — [PR #1](https://github.com/danhk0612/DK-Travel-Helper/pull/1) main 병합 | T00 | 고성능 Work, 사용자 선택 논의는 고성능 Chat |
 | T02 | 지도·검색·경로·외부 연결 공급자 결정 | 차단 — 연동 전까지 보류, 반복 조사 중지 | T01 | 고성능 Work, 좁은 선택은 고성능 Chat |
 | T03 | UI·데이터·시간·이동 계약 설계 | 대기 — 핵심 계약 설계 가능 | T01 (공급자 연동 계약은 T02) | 고성능 Work |
-| T04 | 최소 코드 골격과 개발·검증 환경 | 진행 중 — 구현·CI 통과, PC/모바일 시각 확인 미완료; [초안 PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3), PR #2 stacked | T01 | 저성능 Work |
+| T04 | 최소 코드 골격과 개발·검증 환경 | 진행 중 — 코드 main 반영, 화면 검증 미완료; [PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3) 병합 | T01 | 저성능 Work |
 | T05 | 여행·날짜 저장과 기기 간 이용 기반 | 대기 | T04, T03의 저장·인증·한도 계약 | 저성능 Work |
 | T05A | 관리자 등급별 한도 설정 | 대기 | T05, T03의 관리자·한도 계약 | 저성능 Work |
 | T06 | PC 장소·일정 편집 | 대기 | T05, T05A, T03의 장소·편집 계약 | 저성능 Work |
@@ -29,7 +29,7 @@ T01은 main에 병합됐다. 2026-10-07 사용자의 정보 조사 중심 진행
 
 T02는 차단 상태로 보류한다. T07/T08의 실제 연동을 준비할 때 후보를 좁혀 필요한 근거와 품질을 검증한다. 모든 후보의 과금·문구 충돌·운영 조건이 해소될 때까지 T04나 핵심 계약을 막지 않는다. 검색→즉시 저장·오프라인 확인 요구는 유지하고, 고정 테스트 위치는 검증 자료로만 사용한다. 수동 좌표 입력을 제품 흐름으로 추가하지 않는다.
 
-이 계획은 PR #2 작업 브랜치에 있고 아직 main에 병합되지 않았다. 다음 T04는 사용자의 다음 진행 지시에 따른 명시적 인계로 `task/t02-map-providers` 최신 head를 기반으로 `task/t04-app-foundation`을 만들고, PR base를 `task/t02-map-providers`로 둔다. PR #2가 먼저 main에 병합되면 최신 main에서 시작하고 main을 base로 사용한다. 병합은 별도 지시를 따른다.
+PR #2의 계획·조사 문서와 PR #3의 T04 실행 골격은 main에 병합됐다. 다음 T03은 최신 main에서 시작한다. T04의 PC/모바일 실제 렌더링과 Android/PWA 검증은 미확인 상태로 남기며 독립적인 핵심 계약 설계의 선행 조건으로 강제하지 않는다. T04 전체 완료는 실제 화면 확인 이후에 표시한다.
 
 표의 완료 Task가 미병합이라면 PR/브랜치를 표에 추가한다. 후속 Task 착수 기준은 AI_WORKFLOW.md를 따른다. 검증에서 문제가 나오면 문제별 수정 Task를 추가하고 재검토 조건을 연결한다. 미래 기능의 대규모 백로그는 만들지 않는다.
 
@@ -84,7 +84,7 @@ T02는 차단 상태로 보류한다. T07/T08의 실제 연동을 준비할 때 
 
 ## T04 — 최소 코드 골격과 개발·검증 환경
 
-- 상태/선행: 진행 중 / T01. T02·T03 완료 불필요. `task/t04-app-foundation`은 미병합 PR #2의 최신 `task/t02-map-providers` head를 기반으로 한다.
+- 상태/선행: 진행 중 — 실제 화면 검증 잔여 / T01. PR #2와 [PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3)은 main에 병합됐다. 실행 골격은 통합됐으나 T04 전체 완료는 아니다.
 - 목적: 실행·빌드 가능한 앱을 먼저 만들어 후속 개발의 기반을 확보한다.
 - 범위/관련 요구: R13–R14, U01. D001의 단일 React + TypeScript + Vite 앱 진입점과 PC/모바일 최소 시작 화면, PWA 기본 설정/자체 시작 자원, 개발·타입 검사·빌드 명령, lockfile, 최소 CI를 구성한다. 지도/공급자 없이 실행돼야 한다. 필요한 설정은 설명만 준비하고 계정/서비스 없이도 빌드 가능하게 한다.
 - 관련 모듈/결정: 단일 앱 진입점·스타일·빌드/PWA 설정·CI / [D001](decisions/D001-플랫폼과-데이터.md). 실제 경로는 구현 후 ARCHITECTURE에 기록한다.
@@ -94,7 +94,7 @@ T02는 차단 상태로 보류한다. T07/T08의 실제 연동을 준비할 때 
 - 검증: clean install·타입 검사·production build·최소 CI, 개발/빌드 결과의 PC·모바일 폭 시작 화면 확인. 실제 Android 설치·서비스 워커 검증의 실행 여부/한계를 기록한다. 구현을 그대로 따라가는 테스트를 추가하지 않는다.
 - 환경 이유: 기술이 확정됐고 범위가 실행 골격에 한정되므로 저성능 Work.
 - 구현 결과: Node.js 24/npm 11.9.0, React 19.3, TypeScript 5.9, Vite 8.2, `vite-plugin-pwa` 1.3을 고정했다. `src/App.tsx`, `src/styles.css`, `src/main.tsx`, `public/icons/travel.svg`, Vite/PWA 설정, `package-lock.json`, GitHub Actions CI를 추가했다. PWA 자원 캐시에는 여행 데이터가 포함되지 않는다. README에 설치·실행·검사·빌드/미구현 경계를 기록했다.
-- 검증 결과: clean `npm ci`, `npm run typecheck`, `npm run build` 및 GitHub Actions CI 통과. 최초 CI 실행에서 원격 package-lock 전달 중 잘림 문구가 포함된 손상 파일을 발견해 전체 lockfile을 복구하고 CI 통과를 다시 확인했다. PC/모바일 렌더링 확인을 위해 CUA 브라우저에서 로컬 개발 서버를 열었으나 브라우저와 실행 환경이 분리되어 localhost 연결이 거부됐다. 따라서 화면 시각 검증은 미완료로 기록하고 T04 상태를 진행 중으로 둔다. Android 실기기와 실제 설치/오프라인 동작은 검증하지 않는다.
+- 검증 결과: 검토자가 clean `npm ci`와 타입 검사를 포함한 `npm run build`를 재실행해 통과했다. de785bc의 push/PR CI 둘 다 success이며 코드·CSS·PWA 구성/범위와 diff를 검토했다. PC/모바일 실제 렌더링은 CUA localhost 분리 및 로컬 Chromium 다운로드의 Site Unavailable로 미확인이다. Android 설치/실제 오프라인도 미검증이다. 화면 확인을 통과로 바꾸지 않고 T04 잔여 검증으로 유지한다. T03 핵심 계약 설계는 착수 가능하다.
 
 ## T05 — 여행·날짜 저장과 기기 간 이용 기반
 
@@ -225,7 +225,8 @@ T02는 차단 상태로 보류한다. T07/T08의 실제 연동을 준비할 때 
 
 ```text
 https://github.com/danhk0612/DK-Travel-Helper 의 T03 핵심 계약 설계만 진행해.
-T04 PR이 main에 반영된 뒤 최신 main을 확인해 시작해.
+PR #2와 T04 PR #3은 main에 병합됐다. 최신 main에서 시작해.
+T04 화면 검증은 남아 있으나 공급자 독립 핵심 설계의 착수 조건이 아니다.
 PR #2의 D002와 T02 차단 범위는 최신 저장소에서 확인하고 반복 조사는 하지 마.
 
 PROJECT.md, CURRENT_STATE.md, TASKS.md, REQUIREMENTS.md,
