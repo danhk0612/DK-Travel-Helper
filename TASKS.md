@@ -11,7 +11,8 @@
 | T02 | 지도·검색·경로·외부 연결 공급자 결정 | 차단 — 연동 전까지 보류, 반복 조사 중지 | T01 | 고성능 Work, 좁은 선택은 고성능 Chat |
 | T03 | UI·데이터·시간·이동 계약 설계 | 진행 중 — 핵심 계약 확정; [PR #5](https://github.com/danhk0612/DK-Travel-Helper/pull/5) main 반영, 연동 계약 대기 | T01 (공급자 연동 계약은 T02) | 고성능 Work |
 | T04 | 최소 코드 골격과 개발·검증 환경 | 완료 — 실행·빌드·PC/모바일 폭 화면 검증; [PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3) 병합 | T01 | 저성능 Work |
-| T05 | 여행·날짜 저장과 기기 간 이용 기반 | 진행 중 — [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7), 실제 Supabase/Google/Android 확인 대기 | T04, T03의 저장·인증·한도 계약 | 저성능 Work |
+| T05 | 여행·날짜 저장과 기기 간 이용 기반 | 진행 중 — [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7), T05-R1 수정·외부 검증 대기 | T04, T03의 저장·인증·한도 계약 | 저성능 Work |
+| T05-R1 | [인증·사본·저장 복구 결함 수정](tasks/TASK-T05-R1.md) | 대기 — T05 검토 필수 수정 | T05 구현 브랜치, D003 | 저성능 Work |
 | T05A | 관리자 등급별 한도 설정 | 대기 | T05, T03의 관리자·한도 계약 | 저성능 Work |
 | T06 | PC 장소·일정 편집 | 대기 | T05, T05A, T03의 장소·편집 계약 | 저성능 Work |
 | T07 | 지도·장소 검색·예정 경로 표시 | 대기 | T06, T02 | 저성능 Work |
@@ -25,7 +26,7 @@
 
 T01은 main에 병합됐다. 2026-10-07 사용자의 정보 조사 중심 진행 재검토 지시에 따라, T02 미결정을 전체 개발의 차단으로 적용하던 선행 관계를 좁혔다. 요구사항·공급자 선택은 바꾸지 않는다.
 
-현재는 T05 구현 PR #7 검토와 실제 Supabase/Google/Android 검증을 진행 중이다. T05가 검증·완료되기 전에는 T05A/T06으로 넘어가지 않는다. 앞선 순서 변경의 근거와 현재 선행 관계는 아래 Task 상태와 AI_WORKFLOW를 따른다.
+다음 실행은 T05-R1이다. PR #7 검토에서 SQL NULL revision 우회를 수정했고 인증·사본·저장 복구의 필수 수정 범위를 분리했다. T05-R1은 서비스 계정 없이도 착수할 수 있다. T05가 검증·완료되기 전에는 T05A/T06으로 넘어가지 않는다. 앞선 순서 변경의 근거와 현재 선행 관계는 아래 Task 상태와 AI_WORKFLOW를 따른다.
 
 T02는 차단 상태로 보류한다. T07/T08의 실제 연동을 준비할 때 후보를 좁혀 필요한 근거와 품질을 검증한다. 모든 후보의 과금·문구 충돌·운영 조건이 해소될 때까지 T04나 핵심 계약을 막지 않는다. 검색→즉시 저장·오프라인 확인 요구는 유지하고, 고정 테스트 위치는 검증 자료로만 사용한다. 수동 좌표 입력을 제품 흐름으로 추가하지 않는다.
 
@@ -111,7 +112,7 @@ PR #2의 계획·조사 문서와 PR #3의 T04 실행 골격은 main에 병합�
 - 검증: 저장·재열기·여행/날짜/계정 분리, PC→서버→Android, 준비된/미준비 오프라인 열람과 수정 불가, 세션/사본 정리, 동시 수정 계약, 초기 등급 한도 경계・동시 생성・정책/등급 권한 우회 불가. T03 모델을 사용하며 공급자/실기기 확인 불가 항목은 명시한다.
 - 환경 이유: 확정 저장 계약 구현이므로 저성능 Work.
 - 구현 결과: Google OAuth PKCE 진입, PostgreSQL/RLS 여행·날짜·장소 저장 스키마, revision 조건부 날짜/장소 쓰기, 서버 원자적 등급 한도 함수, IndexedDB 계정별 여행 사본, 여행 목록/재열기/날짜 추가 화면 및 개발 설정 안내를 구현했다. 관리자 대상은 지정하지 않았다. 서비스별 설정은 검증된 사용자 ID와 실제 Supabase 프로젝트에서 수행해야 한다.
-- 검증 결과: GitHub Actions `48b4c93` push/PR CI에서 `npm ci`, `npm run typecheck`, `npm run build`가 모두 성공했다. 승인 사례는 코드/SQL 정적 검토만 했다. 실제 동시 요청·RLS·Google OAuth·IndexedDB/Android 테스트는 수행하지 않았다. 로컬 npm 설치는 실행 환경 네트워크 제한으로 완료되지 않았지만 원격 CI가 타입 검사와 빌드를 수행했다. 서비스 검증 상태는 CURRENT_STATE에 구분해 기록한다.
+- 검증 결과: 검토 기준 `4cfe5a8` push/PR CI와 로컬 타입 검사·빌드 성공. SQL NULL revision 우회를 로컬 PostgreSQL 테스트로 재현·수정했고 저장 계약 테스트 3개 통과. 프런트엔드 검토 결함은 [T05-R1](tasks/TASK-T05-R1.md)에서 재현·수정한다. 실제 OAuth/Supabase 다중 연결/Android 검증은 남아 있다.
 
 ## T05A — 관리자 등급별 한도 설정
 
@@ -231,16 +232,19 @@ PR #2의 계획·조사 문서와 PR #3의 T04 실행 골격은 main에 병합�
 
 ## 새 작업 시작 지시문
 
-T05는 구현 브랜치의 리뷰와 가능한 CI 확인까지 진행하고 멈춘다. 실제 Supabase 프로젝트·Google provider 설정·Android 기기 검증이 없으므로 T05를 완료하거나 T05A로 넘어가지 않는다.
+다음은 T05-R1, 저성능 Work다. 승인된 인증·저장 계약의 결함 수정이며 별도 공급자 조사나 사용자 선택 없이 실행 가능하다. 세부 계약은 [T05-R1](tasks/TASK-T05-R1.md)을 따른다.
 
 ```text
-https://github.com/danhk0612/DK-Travel-Helper 의 T05 검증만 이어서 진행해.
-최신 main, task/t05-travel-storage, PR과 CI, 기준 문서,
-AI_WORKFLOW.md, D001/D003을 먼저 확인해.
-실제 Supabase 프로젝트와 Google provider를 설정할 접근/계정이 제공되면
-DB/RLS/동시 요청/OAuth 및 PC→Android와 오프라인 사본을 검증해.
-관리자 ID는 실제 대상과 직접 대조된 경우에만 설정하고 추측하지 마.
-실제 인증·DB·기기 검증과 모의 검증을 구분해 기록해.
-발견한 T05 범위 결함만 수정하고 타입 검사·빌드·CI·문서·PR을 갱신해.
-T05를 완료 처리하거나 병합하거나 T05A/T06을 시작하지 마.
+https://github.com/danhk0612/DK-Travel-Helper 의 T05-R1을 수행해.
+최신 main, task/t05-travel-storage, PR #7과 CI, PROJECT.md,
+CURRENT_STATE.md, TASKS.md, AI_WORKFLOW.md, REQUIREMENTS.md,
+ARCHITECTURE.md, D001/D003과 tasks/TASK-T05-R1.md를 확인해.
+T05 구현 브랜치를 이어 계정 전환/늦은 응답, OAuth/세션 수명,
+불확실한 저장 결과 복구, IndexedDB 실패/완전 사본, 재연결 최신성만 수정해.
+제어한 계정·지연 응답과 브라우저 IndexedDB로 재현/회귀 검증하고
+npm ci, npm test, 타입 검사, 빌드, CI를 확인해.
+외부 계정 없이 가능한 수정부터 실행하고 실제 OAuth/Supabase/Android 검증과 구분해.
+지도 조사, T05A/T06, 결제, 삭제, 오프라인 쓰기를 추가하지 마.
+실제 관리자 ID와 서비스 비밀 키를 추측하거나 저장소에 넣지 마.
+문서·커밋·PR #7을 갱신하고 재검토로 넘겨. T05 전체 완료나 병합은 하지 마.
 ```

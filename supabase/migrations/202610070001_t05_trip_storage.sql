@@ -139,7 +139,7 @@ begin
   if v_tier is null then raise exception '계정 등급을 확인할 수 없습니다.' using errcode = '42501'; end if;
   select * into v_trip from public.trips where id = p_trip_id and owner_id = v_user for update;
   if not found then raise exception '여행을 찾을 수 없습니다.' using errcode = '42501'; end if;
-  if v_trip.revision <> p_expected_revision then raise exception '여행이 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
+  if v_trip.revision is distinct from p_expected_revision then raise exception '여행이 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
   insert into public.trip_dates(trip_id, travel_date) values (p_trip_id, p_date);
   update public.trips set revision = revision + 1 where id = p_trip_id;
 end;
@@ -168,7 +168,7 @@ begin
   if v_tier is null then raise exception '계정 등급을 확인할 수 없습니다.' using errcode = '42501'; end if;
   select * into v_trip from public.trips where id = p_trip_id and owner_id = v_user for update;
   if not found then raise exception '여행을 찾을 수 없습니다.' using errcode = '42501'; end if;
-  if v_trip.revision <> p_expected_revision then raise exception '여행이 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
+  if v_trip.revision is distinct from p_expected_revision then raise exception '여행이 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
   select place_limit into v_limit from public.tier_limits where tier = v_tier;
   select count(*) into v_count from public.places where trip_id = p_trip_id;
   if v_count >= v_limit then raise exception '여행의 장소 저장 한도에 도달했습니다.' using errcode = 'P0001'; end if;
@@ -204,7 +204,7 @@ declare v_revision bigint;
 begin
   if coalesce(auth.role(), '') <> 'service_role' then raise exception '운영자 권한이 필요합니다.' using errcode = '42501'; end if;
   select revision into v_revision from public.app_settings where id = true for update;
-  if v_revision <> p_expected_revision then raise exception '등급 한도가 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
+  if v_revision is distinct from p_expected_revision then raise exception '등급 한도가 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
   if p_trip_limit <= 0 or p_place_limit <= 0 then raise exception '한도는 양의 정수여야 합니다.' using errcode = '22023'; end if;
   update public.tier_limits set trip_limit = p_trip_limit, place_limit = p_place_limit where tier = p_tier;
   if not found then raise exception '등급을 찾을 수 없습니다.' using errcode = 'P0002'; end if;

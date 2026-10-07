@@ -11,6 +11,7 @@ React + TypeScript + Vite 반응형 PWA입니다. T05에서는 Google 로그인,
 npm ci
 npm run dev
 npm run typecheck
+npm test
 npm run build
 npm run preview
 ```
@@ -47,6 +48,8 @@ commit;
 
 ## 검증 상태
 
-GitHub Actions는 `npm ci`, `npm run typecheck`, `npm run build`를 실행합니다. T05의 SQL/RLS 동시성은 실제 Supabase 프로젝트에서 별도 확인해야 합니다. 실제 Google OAuth, 서버 권한·경쟁 요청, IndexedDB와 Android 실기기 동작은 해당 계정/기기에서 수행하기 전까지 확인된 것으로 보지 않습니다.
+GitHub Actions는 `npm ci`, `npm run typecheck`, `npm test`, `npm run build`를 실행합니다. `npm test`는 PGlite PostgreSQL과 최소 Auth stub의 저장 계약 검사입니다. 실제 OAuth/PostgREST나 다중 연결 잠금 검증은 아닙니다. T05의 SQL/RLS 동시성은 실제 Supabase 프로젝트에서 별도 확인해야 합니다. 실제 Google OAuth, 서버 권한·경쟁 요청, IndexedDB와 Android 실기기 동작은 해당 계정/기기에서 수행하기 전까지 확인된 것으로 보지 않습니다.
+
+초기 migration을 이미 적용한 개발 DB는 SQL NULL revision 수정 함수의 적용 절차가 필요합니다. 테이블 재생성 없이 함수 정의만 갱신하거나 전진 migration을 사용하세요. 남은 인증·사본·복구 결함은 [T05-R1](tasks/TASK-T05-R1.md)을 따릅니다.
 
 현재 구현 범위와 남은 검증은 [CURRENT_STATE.md](CURRENT_STATE.md), 구조는 [ARCHITECTURE.md](ARCHITECTURE.md), 계약은 [TASKS.md](TASKS.md)와 [D003](decisions/D003-일정과-여행중-계약.md)을 확인하세요.
