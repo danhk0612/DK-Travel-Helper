@@ -28,7 +28,7 @@ T05 검토 PR의 원격 CI 결과를 확인하고, 가능하면 사용자가 제
 | 기준·계약 | main `ff4abff`, T04 완료, D003 Q01–Q07 및 T05 계약 확인 |
 | 구현 검토 | 파일·SQL 정적 확인. 사용자 소유권/RLS와 잠금 순서를 코드에서 대조했으나 DB 실행 검증은 아님 |
 | 로컬 타입 검사/빌드 | 미실행: `npm ci`가 네트워크 연결 제한으로 완료되지 않아 `tsc` 실행 불가 |
-| 원격 CI | [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7)의 CI 실행 중 |
+| 원격 CI | [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7) `eea2ae6` push/PR CI 모두 성공: npm ci, typecheck, production build |
 | 실제 Google 로그인/Supabase DB/RLS/동시 요청 | 미검증: 프로젝트와 provider credentials 미제공 |
 | IndexedDB 실제 브라우저 계정 격리 | 코드만 검토, 브라우저 동작 미검증 |
 | PC→Android/오프라인 여행 사본 | 미검증. 기존 T04의 시작 화면 오프라인 자원 검사와 구분 |
