@@ -10,7 +10,7 @@
 | T01 | 플랫폼과 PC·휴대폰 데이터 이용 방식 결정 | 완료 — [PR #1](https://github.com/danhk0612/DK-Travel-Helper/pull/1) main 병합 | T00 | 고성능 Work, 사용자 선택 논의는 고성능 Chat |
 | T02 | 지도·검색·경로·외부 연결 공급자 결정 | 차단 — 연동 전까지 보류, 반복 조사 중지 | T01 | 고성능 Work, 좁은 선택은 고성능 Chat |
 | T03 | UI·데이터·시간·이동 계약 설계 | 대기 — 핵심 계약 설계 가능 | T01 (공급자 연동 계약은 T02) | 고성능 Work |
-| T04 | 최소 코드 골격과 개발·검증 환경 | 진행 중 — `task/t04-app-foundation`, PR 준비 중 (PR #2 stacked) | T01 | 저성능 Work |
+| T04 | 최소 코드 골격과 개발·검증 환경 | 진행 중 — 구현·CI 통과, PC/모바일 시각 확인 미완료; [초안 PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3), PR #2 stacked | T01 | 저성능 Work |
 | T05 | 여행·날짜 저장과 기기 간 이용 기반 | 대기 | T04, T03의 저장·인증·한도 계약 | 저성능 Work |
 | T05A | 관리자 등급별 한도 설정 | 대기 | T05, T03의 관리자·한도 계약 | 저성능 Work |
 | T06 | PC 장소·일정 편집 | 대기 | T05, T05A, T03의 장소·편집 계약 | 저성능 Work |
@@ -94,7 +94,7 @@ T02는 차단 상태로 보류한다. T07/T08의 실제 연동을 준비할 때 
 - 검증: clean install·타입 검사·production build·최소 CI, 개발/빌드 결과의 PC·모바일 폭 시작 화면 확인. 실제 Android 설치·서비스 워커 검증의 실행 여부/한계를 기록한다. 구현을 그대로 따라가는 테스트를 추가하지 않는다.
 - 환경 이유: 기술이 확정됐고 범위가 실행 골격에 한정되므로 저성능 Work.
 - 구현 결과: Node.js 24/npm 11.9.0, React 19.3, TypeScript 5.9, Vite 8.2, `vite-plugin-pwa` 1.3을 고정했다. `src/App.tsx`, `src/styles.css`, `src/main.tsx`, `public/icons/travel.svg`, Vite/PWA 설정, `package-lock.json`, GitHub Actions CI를 추가했다. PWA 자원 캐시에는 여행 데이터가 포함되지 않는다. README에 설치·실행·검사·빌드/미구현 경계를 기록했다.
-- 검증 결과: clean `npm ci`, `npm run typecheck`, `npm run build` 통과. PC/모바일 렌더링 확인을 위해 CUA 브라우저에서 로컬 개발 서버를 열었으나 브라우저와 실행 환경이 분리되어 localhost 연결이 거부됐다. 따라서 화면 시각 검증은 미완료로 기록한다. CI 결과는 원격 반영 후 확인한다. Android 실기기와 실제 설치/오프라인 동작은 검증하지 않는다.
+- 검증 결과: clean `npm ci`, `npm run typecheck`, `npm run build` 및 GitHub Actions CI 통과. 최초 CI 실행에서 원격 package-lock 전달 중 잘림 문구가 포함된 손상 파일을 발견해 전체 lockfile을 복구하고 CI 통과를 다시 확인했다. PC/모바일 렌더링 확인을 위해 CUA 브라우저에서 로컬 개발 서버를 열었으나 브라우저와 실행 환경이 분리되어 localhost 연결이 거부됐다. 따라서 화면 시각 검증은 미완료로 기록하고 T04 상태를 진행 중으로 둔다. Android 실기기와 실제 설치/오프라인 동작은 검증하지 않는다.
 
 ## T05 — 여행·날짜 저장과 기기 간 이용 기반
 
