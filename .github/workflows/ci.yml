@@ -21,7 +21,7 @@ jobs:
           node-version: 24
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --package-lock=true
       - name: Check TypeScript
         run: npm run typecheck
       - name: Build application
