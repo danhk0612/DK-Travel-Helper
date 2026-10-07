@@ -4,7 +4,7 @@
 
 - 제품명: DK Travel Helper / 여행잇다.
 - T00/T01, T04 완료. PR #1/#2/#3/#5 및 T03 핵심 계약은 main에 반영됐다.
-- T05 구현은 `task/t05-travel-storage`와 검토 PR에서 진행 중이다. 구현 브랜치는 main에 병합되지 않았다.
+- T05 구현은 [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7), `task/t05-travel-storage`에서 진행 중이다. 구현 브랜치는 main에 병합되지 않았다.
 - 앱은 Google OAuth PKCE 로그인 흐름, 여행 목록·생성·열기, 날짜 추가, Supabase Auth/REST/RPC 통신, PostgreSQL RLS/원자적 한도 migration, 계정별 IndexedDB 여행 사본을 포함한다.
 - 초기 서버 정책: free 3여행/50장소, paid1 15/150, paid2 50/300. 새 계정은 free. 코드와 DB 함수가 서버 등급·revision·개수를 판정한다.
 - 여행/날짜만 앱 화면에서 다룬다. 장소 검색·편집·일정 배치·관리자 화면·결제·삭제·지도/경로 기능은 구현하지 않았다. 장소 한도는 서버 RPC로 보호하지만 UI에서는 장소를 만들지 않는다.
@@ -28,7 +28,7 @@ T05 검토 PR의 원격 CI 결과를 확인하고, 가능하면 사용자가 제
 | 기준·계약 | main `ff4abff`, T04 완료, D003 Q01–Q07 및 T05 계약 확인 |
 | 구현 검토 | 파일·SQL 정적 확인. 사용자 소유권/RLS와 잠금 순서를 코드에서 대조했으나 DB 실행 검증은 아님 |
 | 로컬 타입 검사/빌드 | 미실행: `npm ci`가 네트워크 연결 제한으로 완료되지 않아 `tsc` 실행 불가 |
-| 원격 CI | PR 생성 후 GitHub Actions 결과를 확인해 갱신 |
+| 원격 CI | [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7)의 CI 실행 중 |
 | 실제 Google 로그인/Supabase DB/RLS/동시 요청 | 미검증: 프로젝트와 provider credentials 미제공 |
 | IndexedDB 실제 브라우저 계정 격리 | 코드만 검토, 브라우저 동작 미검증 |
 | PC→Android/오프라인 여행 사본 | 미검증. 기존 T04의 시작 화면 오프라인 자원 검사와 구분 |
