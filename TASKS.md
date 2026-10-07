@@ -111,7 +111,7 @@ PR #2의 계획·조사 문서와 PR #3의 T04 실행 골격은 main에 병합�
 - 검증: 저장·재열기·여행/날짜/계정 분리, PC→서버→Android, 준비된/미준비 오프라인 열람과 수정 불가, 세션/사본 정리, 동시 수정 계약, 초기 등급 한도 경계・동시 생성・정책/등급 권한 우회 불가. T03 모델을 사용하며 공급자/실기기 확인 불가 항목은 명시한다.
 - 환경 이유: 확정 저장 계약 구현이므로 저성능 Work.
 - 구현 결과: Google OAuth PKCE 진입, PostgreSQL/RLS 여행·날짜·장소 저장 스키마, revision 조건부 날짜/장소 쓰기, 서버 원자적 등급 한도 함수, IndexedDB 계정별 여행 사본, 여행 목록/재열기/날짜 추가 화면 및 개발 설정 안내를 구현했다. 관리자 대상은 지정하지 않았다. 서비스별 설정은 검증된 사용자 ID와 실제 Supabase 프로젝트에서 수행해야 한다.
-- 검증 결과: GitHub Actions `eea2ae6` push/PR CI에서 `npm ci`, `npm run typecheck`, `npm run build`가 모두 성공했다. 승인 사례는 코드/SQL 정적 검토만 했다. 실제 동시 요청·RLS·Google OAuth·IndexedDB/Android 테스트는 수행하지 않았다. 로컬 npm 설치는 실행 환경 네트워크 제한으로 완료되지 않았지만 원격 CI가 타입 검사와 빌드를 수행했다. 서비스 검증 상태는 CURRENT_STATE에 구분해 기록한다.
+- 검증 결과: GitHub Actions `48b4c93` push/PR CI에서 `npm ci`, `npm run typecheck`, `npm run build`가 모두 성공했다. 승인 사례는 코드/SQL 정적 검토만 했다. 실제 동시 요청·RLS·Google OAuth·IndexedDB/Android 테스트는 수행하지 않았다. 로컬 npm 설치는 실행 환경 네트워크 제한으로 완료되지 않았지만 원격 CI가 타입 검사와 빌드를 수행했다. 서비스 검증 상태는 CURRENT_STATE에 구분해 기록한다.
 
 ## T05A — 관리자 등급별 한도 설정
 
