@@ -12,6 +12,8 @@ npm ci
 npm run dev
 npm run typecheck
 npm test
+npx playwright install chromium
+npm run test:browser
 npm run build
 npm run preview
 ```
@@ -21,7 +23,7 @@ Supabase 설정 없이도 설치·타입 검사·빌드를 수행할 수 있습�
 ## Supabase 개발 프로젝트 연결
 
 1. 개인 Supabase 프로젝트에서 Google provider를 켜고 Google OAuth client 설정을 완료합니다. Supabase Auth의 Site URL과 Redirect URLs에 개발 주소(기본 `http://localhost:5173`)와 사용할 HTTPS 앱 origin을 등록합니다.
-2. SQL Editor에서 [T05 migration](supabase/migrations/202610070001_t05_trip_storage.sql)을 적용합니다. 이 migration은 초기 등급 한도 3/50, 15/150, 50/300, 사용자별 RLS, 여행 revision 및 원자적 생성 RPC를 준비합니다.
+2. SQL Editor에서 [T05 migration](supabase/migrations/202610070001_t05_trip_storage.sql)을 적용합니다. 새 DB에서는 001 후 [002 전진 migration](supabase/migrations/202610070002_revision_guards.sql)도 적용합니다. 001이 이미 적용된 DB에는 002만 추가하며 초기 테이블을 재생성하지 않습니다. 초기 migration은 등급 한도 3/50, 15/150, 50/300, 사용자별 RLS, 여행 revision 및 원자적 생성 RPC를 준비합니다.
 3. `.env.example`을 참고해 `.env.local`에 프로젝트 URL과 publishable/anon 공개 키를 입력합니다. 이 두 값은 브라우저 공개 설정입니다. `service_role` 키는 브라우저 환경 변수나 저장소에 넣지 않습니다.
 4. `npm run dev`로 실행하고 Google 로그인 후 여행을 만들고 날짜를 추가합니다.
 
@@ -48,8 +50,8 @@ commit;
 
 ## 검증 상태
 
-GitHub Actions는 `npm ci`, `npm run typecheck`, `npm test`, `npm run build`를 실행합니다. `npm test`는 PGlite PostgreSQL과 최소 Auth stub의 저장 계약 검사입니다. 실제 OAuth/PostgREST나 다중 연결 잠금 검증은 아닙니다. T05의 SQL/RLS 동시성은 실제 Supabase 프로젝트에서 별도 확인해야 합니다. 실제 Google OAuth, 서버 권한·경쟁 요청, IndexedDB와 Android 실기기 동작은 해당 계정/기기에서 수행하기 전까지 확인된 것으로 보지 않습니다.
+GitHub Actions는 `npm ci`, `npm run typecheck`, `npm test`, `npm run test:browser`, `npm run build`를 실행합니다. `npm test`는 PGlite PostgreSQL과 최소 Auth stub의 저장 계약 검사입니다. 실제 OAuth/PostgREST나 다중 연결 잠금 검증은 아닙니다. `npm run test:browser`는 Chromium의 실제 IndexedDB에 가상 계정/HTTP 응답을 적용한 인증·사본·복구 회귀 검증입니다. 테스트 실행 전에 `npx playwright install chromium`을 수행합니다. CI는 Chromium 설치도 수행합니다. T05의 SQL/RLS 동시성은 실제 Supabase 프로젝트에서 별도 확인해야 합니다. 실제 Google OAuth, 서버 권한·경쟁 요청, IndexedDB와 Android 실기기 동작은 해당 계정/기기에서 수행하기 전까지 확인된 것으로 보지 않습니다.
 
-초기 migration을 이미 적용한 개발 DB는 SQL NULL revision 수정 함수의 적용 절차가 필요합니다. 테이블 재생성 없이 함수 정의만 갱신하거나 전진 migration을 사용하세요. 남은 인증·사본·복구 결함은 [T05-R1](tasks/TASK-T05-R1.md)을 따릅니다.
+계정 정리 실패 시 재시도 전 새 로그인은 차단됩니다. 저장 결과가 불확실하면 같은 요청을 다시 보내지 않고 서버 최신본과 명시 확인으로 복구합니다. 형식 버전 없는 예전 사본은 온라인에서 다시 준비합니다. 수정 범위는 [T05-R1](tasks/TASK-T05-R1.md), 남은 실제 인증·서버 경쟁·Android 검증은 [T05-V1](tasks/TASK-T05-V1.md)을 따릅니다.
 
 현재 구현 범위와 남은 검증은 [CURRENT_STATE.md](CURRENT_STATE.md), 구조는 [ARCHITECTURE.md](ARCHITECTURE.md), 계약은 [TASKS.md](TASKS.md)와 [D003](decisions/D003-일정과-여행중-계약.md)을 확인하세요.

@@ -2,7 +2,7 @@
 
 ## 현재 실제 구조
 
-T05 브랜치에서도 한 개의 React + TypeScript + Vite 앱을 유지한다. `src/App.tsx`는 Google 로그인, 여행 목록/생성/열기, 날짜 추가 화면을 제공한다. `src/data/supabase.ts`는 Supabase PKCE OAuth와 Auth/REST/RPC 연결, `src/data/offline.ts`는 계정/여행별 완전 revision IndexedDB 사본, `src/data/types.ts`는 여행·세션 타입을 맡는다. DB/RLS/원자적 쓰기는 `supabase/migrations/202610070001_t05_trip_storage.sql`에 있다. `.env.local`은 개발자 환경에만 두며 Git에서 제외한다. 공급자·기기 검증은 별도다.
+T05 브랜치에서도 한 개의 React + TypeScript + Vite 앱을 유지한다. `src/App.tsx`는 Google 로그인, 여행 목록/생성/열기, 날짜 추가 화면을 제공한다. `src/data/supabase.ts`는 Supabase PKCE OAuth와 Auth/REST/RPC 연결, `src/data/offline.ts`는 계정/여행별 완전 revision IndexedDB 사본, `src/data/types.ts`는 여행·세션·형식 버전 사본과 응답 검증을 맡는다. `src/data/workspace.ts`가 단일 화면 상태와 계정/요청 실행 세대, 사본 작업 순서, 초기화·세션 갱신·미확인 쓰기 복구를 관리한다. App은 상태 구독과 사용자/브라우저 이벤트를 연결한다. DB/RLS/원자적 쓰기는 `supabase/migrations/202610070001_t05_trip_storage.sql`에 있다. `.env.local`은 개발자 환경에만 두며 Git에서 제외한다. 공급자·기기 검증은 별도다.
 
 ## 필요한 최소 책임
 
@@ -54,7 +54,7 @@ Supabase Free의 1주일 비활성 일시정지와 자동 백업 미포함은 �
 - 구간은 인접 배치 ID 쌍으로 식별하고 후보 1개를 둔다. 변경된 구간 삭제 영향은 저장 전 안내한다.
 - 서버 RPC는 인증·소유권·revision·생성 한도를 원자적으로 검증한다. 사본은 계정/여행별 완전 revision으로 교체한다.
 
-T05 화면은 여행과 날짜만 표시·추가한다. 장소 검색·장소 편집·일정 배치·시간 판단은 후속 Task다. 장소 테이블과 한도 적용 RPC는 서버에서 장소 증가를 보호하며 제품 화면은 아직 제공하지 않는다. 관계·권한/동시성·사본 규칙은 [D003](decisions/D003-일정과-여행중-계약.md)을 따른다. 공급자 응답 스키마는 T02 이후 확정한다. 로컬 PostgreSQL 계약 테스트를 추가했으나 실제 Supabase 실행·다중 연결 검증은 아직 수행하지 않았다. 인증/사본/복구의 현재 구현 결함과 수정 경계는 [T05-R1](tasks/TASK-T05-R1.md)에 기록했다. 완전 사본·계정 전환 계약의 구현 완료를 뜻하지 않는다.
+T05 화면은 여행과 날짜만 표시·추가한다. 장소 검색·장소 편집·일정 배치·시간 판단은 후속 Task다. 장소 테이블과 한도 적용 RPC는 서버에서 장소 증가를 보호하며 제품 화면은 아직 제공하지 않는다. 관계·권한/동시성·사본 규칙은 [D003](decisions/D003-일정과-여행중-계약.md)을 따른다. 공급자 응답 스키마는 T02 이후 확정한다. 로컬 PostgreSQL 계약 테스트를 추가했으나 실제 Supabase 실행·다중 연결 검증은 아직 수행하지 않았다. 인증/사본/복구 수정과 검증 범위는 [T05-R1](tasks/TASK-T05-R1.md)에 기록했다. 실제 Google/Supabase 다중 연결/Android 검증은 [T05-V1](tasks/TASK-T05-V1.md)에 분리했다. 사본은 여행/날짜/현재 장소를 한 응답으로 검증하고 형식 버전 1로 교체한다. 사본 저장과 계정 삭제는 순서를 보장하며 오래된 실행 결과는 화면에 적용하지 않는다. 삭제 실패 장벽과 미확인 쓰기는 재실행에도 유지한다.
 
 ## 지도와 이동의 경계
 

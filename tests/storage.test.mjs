@@ -8,7 +8,7 @@ import { PGlite } from '@electric-sql/pglite'
 const userA = '00000000-0000-0000-0000-000000000001'
 const userB = '00000000-0000-0000-0000-000000000002'
 
-async function database() {
+async function database(legacy = false) {
   const db = new PGlite()
   await db.exec(`
     create role anon; create role authenticated; create role service_role;
@@ -23,7 +23,8 @@ async function database() {
   `)
   const sql = await readFile(new URL('../supabase/migrations/202610070001_t05_trip_storage.sql', import.meta.url), 'utf8')
   // PGlite supplies gen_random_uuid in core; it has no pgcrypto extension.
-  await db.exec(sql.replace('create extension if not exists pgcrypto;', ''))
+  const initial = sql.replace('create extension if not exists pgcrypto;', '')
+  await db.exec(legacy ? initial.replaceAll('is distinct from p_expected_revision', '<> p_expected_revision') : initial)
   await db.query('insert into auth.users(id) values ($1), ($2)', [userA, userB])
   await db.query("select set_config('request.jwt.claim.sub', $1, false)", [userA])
   await db.query("select set_config('request.jwt.claim.role', 'authenticated', false)")
@@ -68,5 +69,22 @@ test('owner reads, RPC ownership, direct writes and travel count boundaries', as
     assert.equal((await db.query('select * from trips')).rows.length, 0)
     await rejectsCode(db.query("select public.add_trip_date($1, '2026-10-07', 1)", [id]), '42501')
     await rejectsCode(db.query("select public.operator_set_user_access($1, 'paid2', true)", [userB]), '42501')
+  } finally { await db.close() }
+})
+
+
+test('forward migration repairs an already-applied schema without losing data or RPC grants', async () => {
+  const db = await database(true)
+  try {
+    const { rows: [{ id }] } = await db.query("select public.create_trip('existing trip') as id")
+    await db.exec('reset role')
+    await db.exec(await readFile(new URL('../supabase/migrations/202610070002_revision_guards.sql', import.meta.url), 'utf8'))
+    await db.exec('set role authenticated')
+    assert.equal((await db.query('select name from trips where id=$1', [id])).rows[0].name, 'existing trip')
+    await rejectsCode(db.query("select public.add_trip_date($1, '2026-10-07', null)", [id]), '40001')
+    await rejectsCode(db.query("select public.add_trip_place($1, 'Cafe', null)", [id]), '40001')
+    await db.exec('reset role; set role service_role')
+    await db.query("select set_config('request.jwt.claim.role', 'service_role', false)")
+    await rejectsCode(db.query("select public.operator_set_tier_limits('free', 4, 60, null)"), '40001')
   } finally { await db.close() }
 })
