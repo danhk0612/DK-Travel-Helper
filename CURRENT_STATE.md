@@ -4,7 +4,7 @@
 
 - 제품명: DK Travel Helper / 여행잇다.
 - T00/T01 완료. [PR #1](https://github.com/danhk0612/DK-Travel-Helper/pull/1)은 main에 병합됐다.
-- 현재 작업 계획과 [D002](decisions/D002-지도와-이동.md)는 [초안 PR #2](https://github.com/danhk0612/DK-Travel-Helper/pull/2), `task/t02-map-providers`에 있다. T04는 해당 브랜치 기반 [초안 PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3), `task/t04-app-foundation`에 쌓였다. 둘 다 미병합이다.
+- 개발 순서·D002 조사 문서 [PR #2](https://github.com/danhk0612/DK-Travel-Helper/pull/2)와 T04 앱 골격 [PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3)은 main에 병합됐다. 문서 병합이 T02 공급자 선택 완료를 뜻하지 않는다.
 - 확정 기술: 단일 React + TypeScript + Vite 반응형 웹/PWA, Android 우선. 초기 Supabase Free + Google 로그인 + PostgreSQL 서버 원본, IndexedDB 열람 사본과 Cache Storage 자체 화면 자원.
 - 온라인 로그인 상태에서만 수정하고 오프라인에서는 준비된 계획만 열람한다. 무료/유료1/유료2의 여행·장소 한도 3/50, 15/150, 50/300과 관리자 한도 변경이 확정됐다.
 - 구현됨: `src/` React 시작 화면과 반응형 스타일, `public/icons/travel.svg`, Vite/PWA 매니페스트·자체 정적 자원용 서비스 워커, npm lockfile, 타입 검사·빌드 스크립트, GitHub Actions CI.
@@ -18,10 +18,12 @@
 
 ## 다음 작업
 
-T04 구현과 CI는 통과했다. **PC/모바일 시작 화면의 실제 시각 확인이 미완료**여서 T04는 진행 중이다. 로컬 서버는 실행됐지만 CUA 브라우저가 실행 환경의 localhost에 연결하지 못했다. 화면 확인이 끝나고 PR #2/#3가 기본 브랜치에 반영된 후 다음은 **T03 — UI·데이터·시간·이동 계약 설계의 공급자 독립 핵심 범위**, 고성능 Work다. T04 실제 파일을 반영해 여행·일정 데이터, UI 흐름, 시간 판단, 인증·사본·한도 계약을 설계하고 T02 공급자 응답·보관·실제 경로 연동은 별도 미완료로 남긴다.
+다음은 **T03 — 공급자 독립 핵심 계약 설계**, 고성능 Work다. PR #2/#3이 main에 반영돼 착수할 수 있다. T04의 여행·일정 데이터, UI 흐름, 시간 판단, 인증·사본·한도 계약을 실제 파일 구조에 맞춰 설계한다. T02의 공급자 응답·보관·실제 지도/경로 연동은 별도 미완료로 남긴다.
+
+T04는 코드·설치·타입 검사·빌드·CI 검토가 통과했지만 **PC/모바일 실제 렌더링 확인이 남아 진행 중**이다. 로컬 브라우저 다운로드가 Site Unavailable로 실패해 이를 통과로 처리하지 않았다. 화면 검증은 가능한 환경에서 T04 잔여 검증으로 수행한다. 이 환경 제약은 공급자 독립 계약 설계를 막지 않는다. Android 설치·실제 오프라인도 미검증이다.
 
 T03 핵심 계약 확정 이후 T05 → T05A → T06 순서다. T02는 T07/T08 실제 연동 준비 시 선택 후보에 필요한 근거와 품질을 검증한다. 공급자 조건 미확인이 전체 개발 중단이나 요구 축소를 뜻하지 않는다.
 
 ## 검증 상태
 
-T04: clean `npm ci`, `npm run typecheck`, `npm run build`, 그리고 GitHub Actions CI 통과. 빌드에서 매니페스트·서비스 워커 생성 확인. CUA 브라우저가 실행 환경 localhost에 연결하지 못해 PC/모바일 화면의 실제 렌더링은 미검증이며 반응형 CSS 자체는 포함했다. Android 설치·실제 PWA 오프라인 동작은 미검증. 실제 로그인/DB/API/검색 품질은 구현 범위 밖이다. 과거 작업 경과는 Git 기록을 사용한다.
+T04: clean `npm ci`, `npm run typecheck`, `npm run build`, 그리고 GitHub Actions CI 통과. 빌드에서 매니페스트·서비스 워커 생성 확인. CUA 브라우저가 실행 환경 localhost에 연결하지 못해 PC/모바일 화면의 실제 렌더링은 미검증이며 반응형 CSS 자체는 포함했다. Android 설치·실제 PWA 오프라인 동작은 미검증. 실제 로그인/DB/API/검색 품질은 구현 범위 밖이다. 검토 시 clean 설치와 타입 검사 포함 빌드를 다시 실행해 통과했고 de785bc의 push/PR CI 모두 success임을 확인했다. 코드/CSS/PWA 구성과 변경 범위를 검토했다. 과거 작업 경과는 Git 기록을 사용한다.
