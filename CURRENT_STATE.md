@@ -2,32 +2,28 @@
 
 ## 실제 상태
 
-- 제품명: DK Travel Helper / 여행잇다.
-- T00/T01 완료. [PR #1](https://github.com/danhk0612/DK-Travel-Helper/pull/1)은 main에 병합됐다.
-- 개발 순서·D002 조사 문서 [PR #2](https://github.com/danhk0612/DK-Travel-Helper/pull/2)와 T04 앱 골격 [PR #3](https://github.com/danhk0612/DK-Travel-Helper/pull/3)은 main에 병합됐다. 문서 병합이 T02 공급자 선택 완료를 뜻하지 않는다.
-- 확정 기술: 단일 React + TypeScript + Vite 반응형 웹/PWA, Android 우선. 초기 Supabase Free + Google 로그인 + PostgreSQL 서버 원본, IndexedDB 열람 사본과 Cache Storage 자체 화면 자원.
-- 온라인 로그인 상태에서만 수정하고 오프라인에서는 준비된 계획만 열람한다. 무료/유료1/유료2의 여행·장소 한도 3/50, 15/150, 50/300과 관리자 한도 변경이 확정됐다.
-- 구현됨: `src/` React 시작 화면과 반응형 스타일, `public/icons/travel.svg`, Vite/PWA 매니페스트·자체 정적 자원용 서비스 워커, npm lockfile, 타입 검사·빌드 스크립트, GitHub Actions CI.
-- 실제 로그인·DB·여행 CRUD·지도·검색·관리자·여행 사본은 없다. 서비스 계정 없이 설치·개발 실행·타입 검사·빌드가 가능하다. PWA 캐시는 앱 화면 자원만 포함하며 여행 데이터 오프라인 열람과 다르다.
-- T02는 공급자 저장 조건·역할 선택 미해결로 차단·보류한다. 검색→즉시 저장·오프라인 확인 요구는 유지한다. 가격/약관 반복 조사로 실행 골격과 핵심 계약을 막지 않는다.
-- 지도 공급자·실제 서비스 운영·호스팅·결제는 미정. Supabase Free 초기 제약은 D001, 운영 재검토는 T13을 따른다.
-
-## 지금 가능한 것
-
-`npm ci`, `npm run dev`, `npm run typecheck`, `npm run build`를 사용할 수 있다. 빌드 결과는 `dist/`에 생성되며 `npm run preview`로 확인한다.
-
-## 다음 작업
-
-**T03 공급자 독립 핵심 계약은 확정됐다.** 사용자가 2026-10-07 Q01–Q07에 “모두 내용대로 적용.”을 승인했다. [D003](decisions/D003-일정과-여행중-계약.md)의 관계·시간·세션/사본·동시성·한도/관리자·구간 정책, 가상 사례와 T05/T05A/T06 인계에 반영했다. [PR #5](https://github.com/danhk0612/DK-Travel-Helper/pull/5)로 main에 반영됐다. 코드 구현은 없다. T03 전체는 T02 이후 공급자 연동 계약 보완 대기다.
-
-다음은 **T05 — 여행·날짜 저장과 기기 간 이용 기반 구현**, 저성능 Work다. PR #5 핵심 계약은 main에 병합됐고 T04 실행 골격·화면 검증도 완료돼 착수 조건이 충족됐다. TASKS의 시작 지시문과 D003 구현 인계를 따른다.
-
-T04 완료: Linux headless Chromium에서 production 빌드를 1440×900·390×844·320×740 화면으로 렌더링해 스크린샷을 확인했다. 가로 넘침·페이지 실행 오류가 없고 서비스 워커 제어 후 네트워크 차단/재열기에서도 시작 화면이 표시됐다. 검증 환경에 한국어 시스템 폰트가 없어 테스트에서만 Noto Sans KR을 제공했으며 제품 코드/폰트 의존성은 바꾸지 않았다. 실제 Android 설치·기기 기본 폰트·여행 데이터 오프라인 이용은 미검증이다.
-
-T03 핵심 계약 확정 이후 T05 → T05A → T06 순서다. T02는 T07/T08 실제 연동 준비 시 선택 후보에 필요한 근거와 품질을 검증한다. 공급자 조건 미확인이 전체 개발 중단이나 요구 축소를 뜻하지 않는다.
+- 제품명: DK Travel Helper / 여행잇다. main `ff4abff`에는 T00/T01/T04 및 승인된 T03 핵심 계약이 있다.
+- T05 구현과 검토 수정은 [PR #7](https://github.com/danhk0612/DK-Travel-Helper/pull/7), `task/t05-travel-storage`에 있으며 main 미병합이다.
+- 구현 브랜치에는 Google OAuth PKCE, 여행 목록·생성·열기·날짜 추가, Supabase Auth/REST/RPC, RLS/서버 한도 SQL, 계정별 IndexedDB 사본이 있다. 전체 동작이 검증된 상태는 아니다.
+- 날짜·장소·정책 RPC의 NULL revision 우회를 재현하고 비교를 수정했다. 로컬 PostgreSQL 계약 테스트와 CI 테스트 명령을 추가했다.
+- T05-R1 인증·사본·복구 수정과 로컬 검증을 완료했다. 실행 세대·사본 작업 순서·정리 실패 장벽, OAuth/refresh 중복 방지, 미확인 쓰기 복구, 형식 버전/장소 포함 사본, 입력 보호 최신본 확인을 구현했다. 구현 커밋 `9ed88af`의 원격 CI도 성공했다. T05-R1 완료와 T05 전체 완료는 구분한다.
+- 초기 정책은 free 3/50, paid1 15/150, paid2 50/300이며 새 사용자는 free다. 실제 관리자 대상 ID는 지정하지 않았다.
+- 장소/일정 편집 UI·관리자 화면·결제·삭제·지도/검색/경로는 없다. T02 공급자는 보류 중이며 이번 검토에서 조사하지 않았다.
 
 ## 검증 상태
 
-T04: 설치·타입 검사·빌드·원격 CI 통과에 더해 Linux headless Chromium에서 production 빌드를 1440×900·390×844·320×740 화면으로 렌더링해 스크린샷을 확인했다. 가로 넘침·페이지 실행 오류가 없고 서비스 워커 제어 후 네트워크 차단/재열기에서도 시작 화면이 표시됐다. 검증 환경에 한국어 시스템 폰트가 없어 테스트에서만 Noto Sans KR을 제공했으며 제품 코드/폰트 의존성은 바꾸지 않았다. 실제 Android 설치·기기 기본 폰트·여행 데이터 오프라인 이용은 미검증이다. 과거 작업 경과는 Git 기록을 사용한다.
+| 구분 | 결과 |
+| --- | --- |
+| 검토 기준 | T05 `4cfe5a8`, main `ff4abff` |
+| 구현 커밋 원격 CI | `9ed88af` [CI 성공](https://github.com/danhk0612/DK-Travel-Helper/actions/runs/37602859455): npm ci, typecheck, SQL 테스트, Chromium 설치/브라우저 테스트, build |
+| 이번 로컬 검증 | npm 설치·타입 검사·빌드 성공. SQL/전진 migration 테스트 4개와 Chromium 브라우저 테스트 17개 통과. 이전 코드의 계정 전환 노출·로그아웃 후 사본 부활 재현 후 수정 확인 |
+| SQL 검증 범위 | PGlite PostgreSQL + 최소 Auth stub. NULL/오래된 revision, 기본 소유권·직접 쓰기 거부·운영자 호출 거부·여행 개수 경계. 다중 연결 동시성 검증은 아님 |
+| 프런트엔드 검증 | 실제 Chromium IndexedDB + 제어한 Auth/REST 응답·가상 계정. Google/Supabase 연결 결과가 아님 |
+| Google OAuth/Supabase 실제 연결 | 미검증. 개발 프로젝트·provider 설정 미제공 |
+| PC→Android/여행 사본 실제 사용 | 미검증. T04의 정적 시작 자원 오프라인 검사와 구분 |
 
-T03 문서 검증: 로컬 문서 링크·요구 ID·Task 선행 관계·핵심 확정/연동 미확정 구분과 `git diff --check`를 확인했다. 춘천 1박 2일/경주 2박 3일은 가상 자료로 논리 대조했으며 사용자 승인된 계약의 수동 사례 대조이며 실행 검증이 아니다. T02 조사·코드 변경·빌드/DB/기기 검증은 이번에 수행하지 않았다.
+## 설정과 다음 작업
+
+개발 연결은 README와 `.env.example`을 따른다. 공개 URL/키는 `.env.local`, 서비스 비밀 키는 서버에서만 사용한다. 초기 migration을 적용한 개발 DB는 `202610070002_revision_guards.sql`만 추가한다. 새 DB는 001→002 순서다. 테이블을 삭제/재생성하지 않는다. 형식 버전 없는 예전 사본은 온라인에서 다시 준비한다.
+
+다음은 [T05-V1](tasks/TASK-T05-V1.md)(저성능 Work)의 실제 Google/Supabase/RLS·여러 연결 경쟁·PC→Android 검증이다. 개발 서비스 설정/기기 결과가 없어 차단 상태다. T05는 진행 중이며 PR #7 미병합, T05A/T06은 미착수다. 과거 작업 경과는 Git 기록으로 확인한다.
