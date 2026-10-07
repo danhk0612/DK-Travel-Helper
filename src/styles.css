@@ -1,0 +1,102 @@
+:root {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', Arial, sans-serif;
+  color: #202b25;
+  background: #f6f8f4;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+
+a { color: inherit; text-decoration: none; }
+
+.page-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  padding: 0 7.2vw;
+  background:
+    radial-gradient(ellipse at 84% 17%, rgba(208, 225, 204, .42), transparent 31%),
+    radial-gradient(ellipse at 3% 90%, rgba(232, 220, 193, .28), transparent 28%),
+    #f6f8f4;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+.brand { display: inline-flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 800; letter-spacing: -.05em; }
+.brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 12px; background: #44674d; color: #fff; font-size: 17px; }
+.topbar-caption { color: #89928a; font-size: 12px; font-weight: 600; letter-spacing: .06em; }
+
+.welcome-card {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1320px;
+  min-height: 570px;
+  margin: 20px auto 30px;
+  padding: clamp(36px, 8vw, 112px);
+  overflow: hidden;
+  border: 1px solid rgba(220, 227, 216, .75);
+  border-radius: 30px;
+  background: rgba(255, 255, 252, .79);
+  box-shadow: 0 26px 80px rgba(52, 76, 54, .07);
+}
+
+.welcome-card::after {
+  position: absolute;
+  right: -70px;
+  bottom: -145px;
+  width: min(47vw, 570px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(102, 139, 105, .12);
+  border-radius: 50%;
+  box-shadow: 0 0 0 36px rgba(102, 139, 105, .035), 0 0 0 76px rgba(102, 139, 105, .025);
+  content: '';
+  pointer-events: none;
+}
+
+.eyebrow { display: flex; align-items: center; gap: 9px; color: #55745a; font-size: 13px; font-weight: 700; letter-spacing: .02em; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #82a77c; box-shadow: 0 0 0 4px #edf4e9; }
+h1 { margin: 28px 0 19px; font-size: clamp(42px, 7vw, 76px); font-weight: 800; letter-spacing: -.075em; line-height: 1.2; }
+.intro { max-width: 570px; margin: 0; color: #727d74; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.9; letter-spacing: -.035em; }
+.coming-soon { display: flex; align-items: flex-start; gap: 12px; width: fit-content; max-width: 100%; margin-top: 36px; padding: 15px 18px; border: 1px solid #e7ecdf; border-radius: 13px; background: #f8faf5; color: #58665a; font-size: 13px; line-height: 1.65; }
+.coming-soon-icon { color: #779875; font-size: 15px; line-height: 1.4; }
+.card-footer { display: flex; align-items: center; gap: 12px; margin-top: 65px; color: #9aa299; font-size: 12px; font-weight: 600; letter-spacing: -.01em; }
+.footer-line { display: inline-block; width: 29px; height: 1px; background: #bdc9b8; }
+.page-footer { max-width: 1320px; width: 100%; margin: 0 auto; padding: 0 0 23px; color: #a1a99f; font-size: 11px; text-align: center; }
+.page-footer span { padding: 0 4px; color: #c3cbbf; }
+.mobile-break { display: none; }
+
+@media (max-width: 640px) {
+  .page-shell { padding: 0 19px; }
+  .topbar { padding: 22px 0; }
+  .brand { font-size: 16px; }
+  .brand-mark { width: 31px; height: 31px; border-radius: 11px; }
+  .topbar-caption { font-size: 10px; }
+  .welcome-card { min-height: 0; margin: 20px auto; padding: 62px 27px 52px; border-radius: 24px; }
+  .welcome-card::after { right: -105px; bottom: -74px; width: 300px; }
+  h1 { margin: 24px 0 17px; font-size: clamp(39px, 11vw, 54px); }
+  .intro { font-size: 14px; line-height: 1.9; }
+  .desktop-break { display: none; }
+  .mobile-break { display: initial; }
+  .coming-soon { margin-top: 30px; padding: 13px 14px; font-size: 12px; }
+  .card-footer { margin-top: 49px; font-size: 11px; }
+  .page-footer { padding-bottom: 18px; }
+}
