@@ -20,6 +20,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
+      - name: Verify lockfile input
+        run: |
+          pwd
+          ls -la package.json package-lock.json
+          npm config get package-lock
       - name: Install dependencies
         run: npm ci --package-lock=true
       - name: Check TypeScript
