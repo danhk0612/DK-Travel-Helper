@@ -1,6 +1,6 @@
 # T05-R1 — 인증·사본·저장 복구 결함 수정
 
-- 상태: 진행 중 — 구현·로컬 회귀 검증 완료, 최신 원격 CI 확인 대기. PR #7 미병합.
+- 상태: 완료 — 구현·로컬 회귀·원격 CI 검증 완료. PR #7 미병합; T05 전체 완료와 구분한다.
 - 권장 환경: 저성능 Work. D003의 확정 계약을 구현하는 작업이며 새 제품/아키텍처 선택은 없다.
 - 선행: main의 T04와 승인된 D003, `task/t05-travel-storage`의 T05 구현 및 이번 SQL revision 수정. T05 완료를 선행으로 요구하지 않는다.
 - 목적: 잘못된 계정 노출, 로그아웃 후 사본 재생성, 저장 결과 오인과 불완전한 오프라인 복구를 막는다.
@@ -82,3 +82,5 @@
 - `npm ci`, 타입 검사·production build 성공. 로컬 SQL 테스트 4개, Chromium 브라우저 테스트 17개 통과. 브라우저는 실제 IndexedDB를 사용하되 Auth/REST 응답·계정은 테스트 자료다. T04 정적 앱 자원 검증/실제 Android 검증과 구분한다.
 - `202610070002_revision_guards.sql`은 기존 개발 DB를 보존하며 날짜·장소·정책 함수만 수정한다. 초기 NULL 검사 코드가 적용된 로컬 DB에 전진 migration을 실행해 데이터·함수 권한 보존과 우회 거부를 확인했다. 실제 Supabase 적용 결과는 아니다.
 - 다음은 [T05-V1](TASK-T05-V1.md)의 실제 연결 검증이다. 아직 실제 Google/Supabase 다중 연결/Android 결과가 없으므로 T05 전체는 진행 중이며 PR #7을 병합하지 않는다.
+
+- 원격 구현 검증: `9ed88af`의 [CI](https://github.com/danhk0612/DK-Travel-Helper/actions/runs/37602859455)에서 설치·타입 검사·SQL 테스트·Chromium 설치/브라우저 회귀·production build 모두 성공했다.
