@@ -145,7 +145,7 @@ begin
 end;
 $$;
 
-create function public.add_trip_place(p_trip_id uuid, p_name text, p_category text default null, p_memo text default '', p_expected_revision bigint default 1)
+create function public.add_trip_place(p_trip_id uuid, p_name text, p_expected_revision bigint, p_category text default null, p_memo text default '')
 returns uuid
 language plpgsql
 security definer
@@ -187,7 +187,7 @@ security definer
 set search_path = public, pg_temp
 as $$
 begin
-  if auth.role() <> 'service_role' then raise exception '운영자 권한이 필요합니다.' using errcode = '42501'; end if;
+  if coalesce(auth.role(), '') <> 'service_role' then raise exception '운영자 권한이 필요합니다.' using errcode = '42501'; end if;
   perform 1 from public.app_settings where id = true for share;
   update public.user_profiles set tier = p_tier, is_admin = p_is_admin where user_id = p_user_id;
   if not found then raise exception '대상 사용자를 찾을 수 없습니다.' using errcode = 'P0002'; end if;
@@ -202,7 +202,7 @@ set search_path = public, pg_temp
 as $$
 declare v_revision bigint;
 begin
-  if auth.role() <> 'service_role' then raise exception '운영자 권한이 필요합니다.' using errcode = '42501'; end if;
+  if coalesce(auth.role(), '') <> 'service_role' then raise exception '운영자 권한이 필요합니다.' using errcode = '42501'; end if;
   select revision into v_revision from public.app_settings where id = true for update;
   if v_revision <> p_expected_revision then raise exception '등급 한도가 다른 곳에서 변경됐습니다.' using errcode = '40001'; end if;
   if p_trip_limit <= 0 or p_place_limit <= 0 then raise exception '한도는 양의 정수여야 합니다.' using errcode = '22023'; end if;
@@ -214,10 +214,10 @@ end;
 $$;
 
 revoke all on function public.create_trip(text), public.add_trip_date(uuid, date, bigint),
-  public.add_trip_place(uuid, text, text, text, bigint),
+  public.add_trip_place(uuid, text, bigint, text, text),
   public.operator_set_user_access(uuid, text, boolean),
   public.operator_set_tier_limits(text, integer, integer, bigint) from public, anon;
 grant execute on function public.create_trip(text), public.add_trip_date(uuid, date, bigint),
-  public.add_trip_place(uuid, text, text, text, bigint) to authenticated;
+  public.add_trip_place(uuid, text, bigint, text, text) to authenticated;
 grant execute on function public.operator_set_user_access(uuid, text, boolean),
   public.operator_set_tier_limits(text, integer, integer, bigint) to service_role;
